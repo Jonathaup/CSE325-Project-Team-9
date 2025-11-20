@@ -43,7 +43,7 @@ Our app adds value by automating the recipe building, meal scheduling, and groce
 - Configure SQLite (App.db) in Program.cs.
 - Use Interact with data in Blazor apps.
 
-## Phase 3 – Authentication
+## Phase 3 – Authentication 
 - Integrate ASP.NET Core Identity with ApplicationUser.
 - Build Login.razor, Register.razor, LoginDisplay.razor.
 
@@ -64,13 +64,13 @@ Our app adds value by automating the recipe building, meal scheduling, and groce
 
 # 🗂️ Trello Assignments (4 Participants)
 
-## Participant A – Authentication
+## Participant A – Authentication   Hector
 Identity setup, Login.razor, Register.razor, LoginDisplay.razor.
 
-## Participant B – Data & Services
+## Participant B – Data & Services  Dylan
 ApplicationDbContext.cs, migrations, RecipeService.cs, ScheduleService.cs, ShoppingListService.cs.
 
-## Participant C – Recipes & Ingredients
+## Participant C – Recipes & Ingredients  Jonathan
 CRUD pages (RecipeList, RecipeCreate, RecipeEdit, RecipeDetails), IngredientRow.razor.
 
 ## Participant D – Shopping List & Schedule
