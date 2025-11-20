@@ -162,3 +162,4 @@ For detailed setup instructions, see the [Installation Guide](docs/installation.
 - Hector Olivares
 - Malcolm Nigel Nkomo
 - Jonathan Uribe
+- Carly Rodfort Tesnor
