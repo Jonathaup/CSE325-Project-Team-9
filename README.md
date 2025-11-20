@@ -82,46 +82,68 @@ ShoppingList.razor, aggregation logic, ShoppingListItemRow.razor, ScheduleServic
 # 📁 Project Folder Structure & Initial Files
 
 
-## Directory Overview
-
-### Root Files
-- **Program.cs** - Application entry point and startup configuration
-- **appsettings.json** - Application configuration settings
-- **App.razor** - Root Blazor component
-- **App.db** - SQLite database file
-
-### Data Layer (`/Data`)
-- **ApplicationDbContext.cs** - Entity Framework database context
-- **Migrations/** - Database migration files
-- **SeedData.cs** - Initial data seeding
-
-### Business Models (`/Models`)
-- **Recipe.cs** - Recipe entity model
-- **Ingredient.cs** - Ingredient entity model
-- **ShoppingListItem.cs** - Shopping list item model
-- **MealSchedule.cs** - Meal scheduling model
-- **ApplicationUser.cs** - User authentication model
-
-### Services Layer (`/Services`)
-- **IRecipeService.cs** & **RecipeService.cs** - Recipe business logic
-- **IScheduleService.cs** & **ScheduleService.cs** - Meal scheduling logic
-- **IShoppingListService.cs** - Shopping list operations
-- **IAuthService.cs** & **AuthService.cs** - Authentication services
-
-### UI Components (`/Pages` & `/Components`)
-- **Pages/** - Main application pages and routable components
-- **Components/** - Reusable UI components
-- **Shared/** - Layout components and shared UI elements
-
-### Static Resources (`/wwwroot`)
-- **css/** - Stylesheets and CSS files
-- **js/** - JavaScript files and scripts
-- **icons/** - Application icons and images
-
-### Testing (`/Tests`)
-- **RecipeServiceTests.cs** - Recipe service unit tests
-- **ShoppingListTests.cs** - Shopping list functionality tests
-
+How to put the following structure in a README file at GitHub
+```
+RecipeManager/
+│   Program.cs
+│   appsettings.json
+│   App.razor
+│   Imports.razor
+│   App.db
+│
+├── Data/
+│   ├── ApplicationDbContext.cs
+│   ├── Migrations/
+│   └── SeedData.cs
+│
+├── Models/
+│   ├── Recipe.cs
+│   ├── Ingredient.cs
+│   ├── ShoppingListItem.cs
+│   ├── MealSchedule.cs
+│   └── ApplicationUser.cs
+│
+├── Services/
+│   ├── IRecipeService.cs
+│   ├── RecipeService.cs
+│   ├── IScheduleService.cs
+│   ├── ScheduleService.cs
+│   ├── IShoppingListService.cs
+│   ├── IAuthService.cs
+│   └── AuthService.cs
+│
+├── Pages/
+│   ├── Index.razor
+│   ├── Login.razor
+│   ├── Register.razor
+│   ├── Recipes/
+│   │     ├── RecipeList.razor
+│   │     ├── RecipeCreate.razor
+│   │     ├── RecipeEdit.razor
+│   │     └── RecipeDetails.razor
+│   │
+│   └── Shopping/
+│       └── ShoppingList.razor
+│      
+├── Components/
+│   ├── RecipeCard.razor
+│   ├── IngredientRow.razor
+│   └── ShoppingListItemRow.razor
+│
+├── Shared/
+│   ├── NavMenu.razor
+│   ├── MainLayout.razor
+│   └── LoginDisplay.razor
+│
+├── wwwroot/
+│   ├── css/
+│   ├── js/
+│   └── icons/
+│
+└── Tests/
+    ├── RecipeServiceTests.cs
+    └── ShoppingListTests.cs
+```
 ## Technology Stack
 - **Frontend**: Blazor WebAssembly
 - **Backend**: ASP.NET Core
