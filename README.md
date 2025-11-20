@@ -70,7 +70,7 @@ Identity setup, Login.razor, Register.razor, LoginDisplay.razor.
 ## Participant B – Data & Services  Dylan
 ApplicationDbContext.cs, migrations, RecipeService.cs, ScheduleService.cs, ShoppingListService.cs.
 
-## Participant C – Recipes & Ingredients  Jonathan
+## Jonathan Uribe – Recipes & Ingredients  Jonathan
 CRUD pages (RecipeList, RecipeCreate, RecipeEdit, RecipeDetails), IngredientRow.razor.
 
 ## Participant D – Shopping List & Schedule
