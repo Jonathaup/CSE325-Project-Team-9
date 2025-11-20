@@ -64,10 +64,10 @@ Our app adds value by automating the recipe building, meal scheduling, and groce
 
 # 🗂️ Trello Assignments (4 Participants)
 
-## Participant A – Authentication   Hector
+## Hector Olivares – Authentication   Hector
 Identity setup, Login.razor, Register.razor, LoginDisplay.razor.
 
-## Participant B – Data & Services  Dylan
+## Dylan Stephenson – Data & Services  Dylan
 ApplicationDbContext.cs, migrations, RecipeService.cs, ScheduleService.cs, ShoppingListService.cs.
 
 ## Jonathan Uribe – Recipes & Ingredients  Jonathan
