@@ -1,0 +1,35 @@
+@page "/recipes"
+
+@using RecipeManager.Services
+@using RecipeManager.Models
+
+@inject RecipeService RecipeService
+
+<h3>Recipes</h3>
+
+<a href="/recipes/create">Create New Recipe</a>
+
+@if (recipes == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <ul>
+        @foreach (var recipe in recipes)
+        {
+            <li>
+                <a href="/recipes/details/@recipe.Id">@recipe.Title</a>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private List<Recipe>? recipes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        recipes = await RecipeService.GetAllAsync();
+    }
+}

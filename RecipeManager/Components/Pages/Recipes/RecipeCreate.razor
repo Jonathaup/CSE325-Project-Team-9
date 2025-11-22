@@ -1,0 +1,74 @@
+@page "/recipes/create"
+@using RecipeManager.Models
+@using RecipeManager.Services
+@inject RecipeService RecipeService
+@inject NavigationManager Navigation
+
+<h3>Create Recipe</h3>
+
+<EditForm Model="recipe" OnValidSubmit="HandleValidSubmit">
+    <InputText @bind-Value="recipe.Title" placeholder="Title" />
+    <InputTextArea @bind-Value="recipe.Steps" placeholder="Steps" />
+
+    <h4>Ingredients</h4>
+    <table>
+        <tbody>
+            @for (int i = 0; i < recipe.Ingredients.Count; i++)
+            {
+                <tr @key="recipe.Ingredients[i]">
+                    <td><InputText @bind-Value="recipe.Ingredients[i].Name" placeholder="Name" /></td>
+                    <td><InputNumber @bind-Value="recipe.Ingredients[i].Quantity" placeholder="Quantity" /></td>
+                    <td><InputText @bind-Value="recipe.Ingredients[i].Unit" placeholder="Unit" /></td>
+                    <td>
+                        <button type="button" @onclick="@(() => RemoveIngredient(i))">Remove</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button type="button" @onclick="AddIngredient">Add Ingredient</button>
+    <button type="submit">Save Recipe</button>
+</EditForm>
+
+@code {
+   private Recipe recipe = new Recipe
+{
+    Title = string.Empty,
+    Steps = string.Empty,
+    Ingredients = new List<Ingredient>
+    {
+        new Ingredient { Name = string.Empty, Quantity = 0, Unit = string.Empty }
+    }
+};
+
+    protected override void OnInitialized()
+    {
+        recipe = new Recipe
+        {
+            Ingredients = new List<Ingredient>
+            {
+                new Ingredient { Name = string.Empty, Quantity = 0, Unit = string.Empty }
+            }
+        };
+    }
+
+    private void AddIngredient()
+    {
+        recipe.Ingredients.Add(new Ingredient { Name = string.Empty, Quantity = 0, Unit = string.Empty });
+    }
+
+    private void RemoveIngredient(int index)
+    {
+        if (recipe.Ingredients.Count > 1)
+            recipe.Ingredients.RemoveAt(index);
+        else
+            recipe.Ingredients[0] = new Ingredient { Name = string.Empty, Quantity = 0, Unit = string.Empty };
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        await RecipeService.AddAsync(recipe);
+        Navigation.NavigateTo("/recipes");
+    }
+}
