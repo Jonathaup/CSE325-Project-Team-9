@@ -1,0 +1,22 @@
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
+
+<AuthorizeView>
+    <Authorized>
+        <span class="navbar-text me-3">
+            Hello, <strong>@context.User.Identity?.Name</strong>!
+        </span>
+        
+        <a class="btn btn-sm btn-outline-primary me-2" href="list">
+            My Recipes
+        </a>
+
+        <a class="btn btn-sm btn-outline-danger" href="logout">
+            Log out
+        </a>
+    </Authorized>
+    <NotAuthorized>
+        <a class="btn btn-sm btn-outline-dark me-2" href="register">Register</a>
+        <a class="btn btn-sm btn-primary" href="login">Log in</a>
+    </NotAuthorized>
+</AuthorizeView>

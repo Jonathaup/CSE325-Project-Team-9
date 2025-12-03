@@ -1,38 +1,80 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
-using RecipeManager.Data;
 using RecipeManager.Components;
+using RecipeManager.Data;
 using RecipeManager.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services for Blazor and Razor Components
+// ==========================================
+// 1. Service Registration
+// ==========================================
+
+// Register Controller services. This is required for AuthController to work.
+builder.Services.AddControllers();
+
+// Add Razor/Blazor services
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// Configure the database context to use SQLite
+// Add Authentication (Cookie-based)
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.Name = "RecipeAuth";
+        options.LoginPath = "/login";
+        options.LogoutPath = "/logout";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+        options.SlidingExpiration = true;
+    });
+
+// Add Authorization & Cascading State (Required for <AuthorizeView> to work in Blazor)
+builder.Services.AddAuthorization();
+builder.Services.AddCascadingAuthenticationState();
+
+// Add Database Context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Register RecipeService as a scoped service
+// Add Application Logic Services
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<RecipeService>();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-// Configure request pipeline for production
+// ==========================================
+// 2. Middleware Pipeline
+// ==========================================
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     app.UseHsts();
 }
 
-// Redirect HTTP to HTTPS and enable anti-forgery
 app.UseHttpsRedirection();
+
+// Changed from UseStaticAssets() to UseStaticFiles() to serve wwwroot files correctly
+app.UseStaticFiles();
+
+// Enable Anti-forgery tokens
 app.UseAntiforgery();
 
-// Map static files and Blazor components
-app.MapStaticAssets();
+// Enable Authentication & Authorization (Must be before mapping endpoints)
+app.UseAuthentication();
+app.UseAuthorization();
+
+// ==========================================
+// 3. Endpoint Mapping
+// ==========================================
+
+// Map the Blazor App
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
-// Run the application
+// Map the AuthController (Must be mapped for the Login form POST to work)
+app.MapControllers();
+
 app.Run();

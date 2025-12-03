@@ -82,64 +82,51 @@ ShoppingList.razor, aggregation logic, ShoppingListItemRow.razor, ScheduleServic
 How to put the following structure in a README file at GitHub
 ```
 RecipeManager/
-│   Program.cs
-│   appsettings.json
-│   App.razor
-│   Imports.razor
-│   App.db
-│
-├── Data/
-│   ├── ApplicationDbContext.cs
-│   ├── Migrations/
-│   └── SeedData.cs
-│
-├── Models/
-│   ├── Recipe.cs
-│   ├── Ingredient.cs
-│   ├── ShoppingListItem.cs
-│   ├── MealSchedule.cs
-│   └── ApplicationUser.cs
-│
-├── Services/
-│   ├── IRecipeService.cs
-│   ├── RecipeService.cs
-│   ├── IScheduleService.cs
-│   ├── ScheduleService.cs
-│   ├── IShoppingListService.cs
-│   ├── IAuthService.cs
-│   └── AuthService.cs
-│
-├── Pages/
-│   ├── Index.razor
-│   ├── Login.razor
-│   ├── Register.razor
-│   ├── Recipes/
-│   │     ├── RecipeList.razor
-│   │     ├── RecipeCreate.razor
-│   │     ├── RecipeEdit.razor
-│   │     └── RecipeDetails.razor
-│   │
-│   └── Shopping/
-│       └── ShoppingList.razor
-│      
 ├── Components/
-│   ├── RecipeCard.razor
-│   ├── IngredientRow.razor
-│   └── ShoppingListItemRow.razor
-│
-├── Shared/
-│   ├── NavMenu.razor
-│   ├── MainLayout.razor
-│   └── LoginDisplay.razor
-│
-├── wwwroot/
-│   ├── css/
-│   ├── js/
-│   └── icons/
-│
-└── Tests/
-    ├── RecipeServiceTests.cs
-    └── ShoppingListTests.cs
+│   ├── _Imports.razor
+│   ├── App.razor
+│   ├── Routes.razor
+│   ├── Shared/
+│   │    ├── LoginDisplay.razor
+│   │    ├── MainLayout.razor
+│   │    ├── MainLayout.razor.css
+│   │    ├── NavMenu.razor
+│   │    └── NavMenu.razor.css
+│   └── Pages/
+│   │   ├── Counter.razor
+│   │   ├── Create.razor
+│   │   ├── Error.razor
+│   │   ├── Home.razor
+│   │   ├── List.razor
+│   │   ├── Login.razor
+│   │   ├── Logout.razor
+│   │   └── Weather.razor
+│   ├── App.db
+│   ├── Program.cs
+│   └── appsettings.json
+├── Controllers/
+│   └── AuthController.cs
+├── Data/
+│   └── ApplicationDbContext.cs
+├── Models/
+│   ├── Ingredient.cs
+│   ├── Recipe.cs
+│   └── User.cs
+├── Services/
+│   ├── IUserService.cs
+│   ├── RecipeService.cs
+│   └── UserService.cs
+└── wwwroot/
+│  ├─ lib/
+│  │  └─ bootstrap/
+│  ├─ app.css
+│  └─ favicon.png
+├─ App.db
+├─ appsettings.Development.json
+├─ appsettings.json
+├─ Program.cs
+├─ RecipeManager.csproj
+└─ RecipeManager.sln
 ```
 ## Technology Stack
 - **Frontend**: Blazor WebAssembly
