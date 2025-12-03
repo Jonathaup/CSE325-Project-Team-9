@@ -14,6 +14,13 @@
                     <h3 class="mb-0"><i class="bi bi-plus-circle"></i> Create New Recipe</h3>
                 </div>
                 <div class="card-body">
+                    @if (successMessage != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="bi bi-check-circle-fill"></i> @successMessage
+                        </div>
+                    }
+
                     <EditForm Model="recipe" OnValidSubmit="HandleValidSubmit">
                         <DataAnnotationsValidator />
                         <ValidationSummary class="alert alert-danger" />
@@ -98,8 +105,17 @@
                             <a href="/recipes" class="btn btn-outline-secondary">
                                 <i class="bi bi-x-circle"></i> Cancel
                             </a>
-                            <button type="submit" class="btn btn-success">
-                                <i class="bi bi-save"></i> Save Recipe
+                            <button type="submit" class="btn btn-success" disabled="@isSaving">
+                                @if (isSaving)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    <span>Saving...</span>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-save"></i>
+                                    <span>Save Recipe</span>
+                                }
                             </button>
                         </div>
                     </EditForm>
@@ -172,6 +188,10 @@
         border-color: #146c43;
     }
 
+    .alert i {
+        margin-right: 0.5rem;
+    }
+
     @@media (max-width: 768px) {
         .table-responsive {
             font-size: 0.875rem;
@@ -198,6 +218,9 @@
         }
     };
 
+    private string? successMessage;
+    private bool isSaving = false;
+
     private void AddIngredient()
     {
         recipe.Ingredients.Add(new Ingredient { Name = string.Empty, Quantity = 0, Unit = string.Empty });
@@ -219,7 +242,25 @@
 
     private async Task HandleValidSubmit()
     {
-        await RecipeService.AddAsync(recipe);
-        Navigation.NavigateTo("/recipes");
+        try
+        {
+            isSaving = true;
+            StateHasChanged();
+
+            string recipeName = recipe.Title ?? "Recipe";
+            await RecipeService.AddAsync(recipe);
+
+            successMessage = $"'{recipeName}' has been created successfully!";
+            StateHasChanged();
+
+            // Esperar 2 segundos para mostrar el mensaje antes de redirigir
+            await Task.Delay(2000);
+            Navigation.NavigateTo("/recipes");
+        }
+        catch (Exception)
+        {
+            successMessage = null;
+            isSaving = false;
+            }
     }
 }
