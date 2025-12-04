@@ -4,49 +4,58 @@ using RecipeManager.Models;
 
 namespace RecipeManager.Services
 {
+    // Service class that handles all recipe-related database operations
     public class RecipeService
     {
+        // Database context for accessing recipe data
         private readonly ApplicationDbContext _context;
 
+        // Constructor: injects the database context
         public RecipeService(ApplicationDbContext context)
         {
             _context = context;
         }
 
+        // Retrieves all recipes from the database including their ingredients
         public async Task<List<Recipe>> GetAllAsync() =>
             await _context.Recipes.Include(r => r.Ingredients).ToListAsync();
 
+        // Retrieves a single recipe by ID including its ingredients
+        // Uses AsNoTracking to prevent tracking issues when reading data
         public async Task<Recipe?> GetByIdAsync(int id) =>
             await _context.Recipes
                 .Include(r => r.Ingredients)
-                .AsNoTracking()  // Importante para evitar problemas de seguimiento
+                .AsNoTracking()  // Important to avoid tracking issues
                 .FirstOrDefaultAsync(r => r.Id == id);
 
+        // Adds a new recipe to the database
         public async Task AddAsync(Recipe recipe)
         {
             _context.Recipes.Add(recipe);
             await _context.SaveChangesAsync();
         }
 
+        // Updates an existing recipe and its ingredients
         public async Task UpdateAsync(Recipe recipe)
         {
-            // Actualizar los datos básicos de la receta
+            // Retrieve the existing recipe with its ingredients from the database
             var existingRecipe = await _context.Recipes
                 .Include(r => r.Ingredients)
                 .FirstOrDefaultAsync(r => r.Id == recipe.Id);
 
+            // Exit if recipe doesn't exist
             if (existingRecipe == null)
                 return;
 
-            // Actualizar propiedades de la receta
+            // Update basic recipe properties
             existingRecipe.Title = recipe.Title;
             existingRecipe.Steps = recipe.Steps;
 
-            // Obtener los ingredientes existentes
+            // Get current and incoming ingredient lists
             var existingIngredients = existingRecipe.Ingredients.ToList();
             var incomingIngredients = recipe.Ingredients.ToList();
 
-            // Eliminar ingredientes que ya no están
+            // Remove ingredients that are no longer in the updated recipe
             foreach (var existing in existingIngredients)
             {
                 if (!incomingIngredients.Any(i => i.Id == existing.Id))
@@ -55,35 +64,39 @@ namespace RecipeManager.Services
                 }
             }
 
-            // Actualizar o agregar ingredientes
+            // Update existing ingredients or add new ones
             foreach (var incoming in incomingIngredients)
             {
                 var existing = existingIngredients.FirstOrDefault(i => i.Id == incoming.Id);
-                
+
                 if (existing != null)
                 {
-                    // Actualizar ingrediente existente
+                    // Update existing ingredient properties
                     existing.Name = incoming.Name;
                     existing.Quantity = incoming.Quantity;
                     existing.Unit = incoming.Unit;
                 }
                 else
                 {
-                    // Agregar nuevo ingrediente
+                    // Add new ingredient to the recipe
                     incoming.RecipeId = recipe.Id;
                     existingRecipe.Ingredients.Add(incoming);
                 }
             }
 
+            // Save all changes to the database
             await _context.SaveChangesAsync();
         }
 
+        // Deletes a recipe and its associated ingredients from the database
         public async Task DeleteAsync(int id)
         {
+            // Retrieve the recipe with its ingredients
             var recipe = await _context.Recipes
                 .Include(r => r.Ingredients)
                 .FirstOrDefaultAsync(r => r.Id == id);
-                
+
+            // Remove the recipe if it exists (ingredients will be cascade deleted)
             if (recipe != null)
             {
                 _context.Recipes.Remove(recipe);

@@ -10,6 +10,7 @@
         <div class="col-lg-10">
             @if (recipe == null)
             {
+                <!-- Loading state shown while fetching the recipe data -->
                 <div class="text-center my-5">
                     <div class="spinner-border text-primary" role="status">
                         <span class="visually-hidden">Loading...</span>
@@ -19,20 +20,25 @@
             }
             else
             {
+                <!-- Recipe details card container -->
                 <div class="card shadow-sm">
+                    <!-- Header showing the recipe title -->
                     <div class="card-header bg-primary text-white">
                         <h3 class="mb-0"><i class="bi bi-book"></i> @recipe.Title</h3>
                     </div>
                     <div class="card-body">
+                        <!-- Steps section -->
                         <div class="mb-4">
                             <h5 class="section-title">
                                 <i class="bi bi-list-ol"></i> Preparation Steps
                             </h5>
                             <div class="steps-content">
+                                <!-- Display steps with preserved formatting -->
                                 <p style="white-space: pre-wrap;">@recipe.Steps</p>
                             </div>
                         </div>
 
+                        <!-- Ingredients table section -->
                         <div class="mb-4">
                             <h5 class="section-title">
                                 <i class="bi bi-basket"></i> Ingredients
@@ -47,6 +53,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <!-- Loop through each ingredient and render as table row -->
                                         @foreach (var ingredient in recipe.Ingredients)
                                         {
                                             <tr>
@@ -60,6 +67,7 @@
                             </div>
                         </div>
 
+                        <!-- Message shown after successful deletion -->
                         @if (deleteMessage != null)
                         {
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -67,15 +75,19 @@
                             </div>
                         }
 
+                        <!-- If delete confirmation is not active, show main action buttons -->
                         @if (!showDeleteConfirm)
                         {
                             <div class="d-flex gap-2 justify-content-end border-top pt-3">
+                                <!-- Back to recipe list -->
                                 <a href="/recipes" class="btn btn-outline-secondary">
                                     <i class="bi bi-arrow-left"></i> Back to List
                                 </a>
+                                <!-- Edit recipe button -->
                                 <a href="/recipes/edit/@recipe.Id" class="btn btn-primary">
                                     <i class="bi bi-pencil-square"></i> Edit
                                 </a>
+                                <!-- Show delete confirmation -->
                                 <button type="button" class="btn btn-danger" @onclick="ShowDeleteConfirmation">
                                     <i class="bi bi-trash"></i> Delete
                                 </button>
@@ -83,6 +95,7 @@
                         }
                         else
                         {
+                            <!-- Delete confirmation prompt -->
                             <div class="alert alert-warning border-warning mt-3">
                                 <h5 class="alert-heading">
                                     <i class="bi bi-exclamation-triangle-fill"></i> Confirm Deletion
@@ -90,9 +103,11 @@
                                 <p class="mb-3">Are you sure you want to delete this recipe? This action cannot be undone.</p>
                                 <hr>
                                 <div class="d-flex gap-2 justify-content-end">
+                                    <!-- Cancel deletion -->
                                     <button type="button" class="btn btn-outline-secondary" @onclick="CancelDelete">
                                         <i class="bi bi-x-circle"></i> Cancel
                                     </button>
+                                    <!-- Confirm deletion -->
                                     <button type="button" class="btn btn-danger" @onclick="DeleteRecipe">
                                         <i class="bi bi-trash-fill"></i> Yes, Delete
                                     </button>
@@ -107,16 +122,19 @@
 </div>
 
 <style>
+    /* Card styling for clean rounded design */
     .card {
         border: none;
         border-radius: 12px;
     }
 
+    /* Header styling with padding and rounded top corners */
     .card-header {
         border-radius: 12px 12px 0 0 !important;
         padding: 1.5rem;
     }
 
+    /* Section titles with bottom border and punctuation icon */
     .section-title {
         color: #2c3e50;
         font-weight: 600;
@@ -130,6 +148,7 @@
         color: #0d6efd;
     }
 
+    /* Container for the preparation steps */
     .steps-content {
         background-color: #f8f9fa;
         padding: 1.5rem;
@@ -143,6 +162,7 @@
         color: #495057;
     }
 
+    /* Row hover effect for ingredients table */
     .table-hover tbody tr:hover {
         background-color: rgba(13, 110, 253, 0.05);
     }
@@ -151,6 +171,7 @@
         padding: 1rem;
     }
 
+    /* Button styling with hover animation */
     .btn {
         border-radius: 6px;
         padding: 0.5rem 1rem;
@@ -167,6 +188,7 @@
         margin-right: 0.25rem;
     }
 
+    /* Alert styling with rounded corners */
     .alert {
         border-radius: 8px;
         border-width: 2px;
@@ -180,6 +202,7 @@
         font-size: 1.2rem;
     }
 
+    /* Mobile responsiveness for stacked buttons and table adjustments */
     @@media (max-width: 768px) {
         .d-flex.gap-2 {
             flex-direction: column;
@@ -196,28 +219,38 @@
 </style>
 
 @code {
+    // Route parameter representing the recipe ID passed in the URL
     [Parameter]
     public int Id { get; set; }
-    
+
+    // Holds the loaded recipe object
     private Recipe? recipe;
+
+    // Message shown after successful or failed deletion
     private string? deleteMessage;
+
+    // Controls whether the delete confirmation UI is displayed
     private bool showDeleteConfirm = false;
 
+    // Load recipe data by ID when the component initializes
     protected override async Task OnInitializedAsync()
     {
         recipe = await RecipeService.GetByIdAsync(Id);
     }
 
+    // Trigger confirmation state to show delete warning
     private void ShowDeleteConfirmation()
     {
         showDeleteConfirm = true;
     }
 
+    // Cancel the deletion and hide confirmation UI
     private void CancelDelete()
     {
         showDeleteConfirm = false;
     }
 
+    // Delete the recipe and navigate back after showing a success message
     private async Task DeleteRecipe()
     {
         if (recipe != null)
@@ -228,13 +261,14 @@
                 await RecipeService.DeleteAsync(recipe.Id);
                 deleteMessage = $"'{recipeName}' has been deleted successfully!";
                 StateHasChanged();
-                
-                // Esperar 2 segundos para mostrar el mensaje antes de redirigir
+
+                // Wait 2 seconds so user can read the success message
                 await Task.Delay(2000);
                 Navigation.NavigateTo("/recipes");
             }
             catch (Exception ex)
             {
+                // Show error message and hide confirmation UI
                 deleteMessage = $"Error deleting recipe: {ex.Message}";
                 showDeleteConfirm = false;
                 StateHasChanged();

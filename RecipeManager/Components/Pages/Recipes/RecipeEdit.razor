@@ -10,11 +10,30 @@
     <div class="row justify-content-center">
         <div class="col-lg-10">
             <div class="card shadow-sm">
+                <!-- Card header with page title -->
                 <div class="card-header bg-primary text-white">
                     <h3 class="mb-0"><i class="bi bi-pencil-square"></i> Edit Recipe</h3>
                 </div>
                 <div class="card-body">
-                    @if (recipe == null)
+                    <!-- Error message display -->
+                    @if (errorMessage != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill"></i> @errorMessage
+                            <button type="button" class="btn-close" @onclick="DismissError" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <!-- Success message display -->
+                    @if (successMessage != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="bi bi-check-circle-fill"></i> @successMessage
+                        </div>
+                    }
+
+                    <!-- Loading state while fetching recipe data -->
+                    @if (isLoading)
                     {
                         <div class="text-center my-5">
                             <div class="spinner-border text-primary" role="status">
@@ -23,43 +42,53 @@
                             <p class="mt-3 text-muted">Loading recipe...</p>
                         </div>
                     }
+                    else if (recipe == null)
+                    {
+                        <!-- Display error when recipe is not found -->
+                        <div class="alert alert-warning" role="alert">
+                            <i class="bi bi-exclamation-circle"></i>
+                            Recipe not found. <a href="/recipes" class="alert-link">Return to recipes list</a>
+                        </div>
+                    }
                     else
                     {
+                        <!-- Recipe edit form -->
                         <EditForm Model="recipe" OnValidSubmit="HandleValidSubmit">
                             <DataAnnotationsValidator />
                             <ValidationSummary class="alert alert-danger" />
-                            
+
+                            <!-- Recipe title input -->
                             <div class="mb-4">
                                 <label class="form-label fw-bold">
                                     <i class="bi bi-card-heading"></i> Recipe Title
                                 </label>
-                                <InputText @bind-Value="recipe.Title" 
-                                          placeholder="Enter recipe title" 
-                                          class="form-control form-control-lg" />
+                                <InputText @bind-Value="recipe.Title" placeholder="Enter recipe title"
+                                    class="form-control form-control-lg" />
                             </div>
-                            
+
+                            <!-- Preparation steps input -->
                             <div class="mb-4">
                                 <label class="form-label fw-bold">
                                     <i class="bi bi-list-ol"></i> Preparation Steps
                                 </label>
-                                <InputTextArea @bind-Value="recipe.Steps" 
-                                              placeholder="Describe the preparation steps..." 
-                                              class="form-control" 
-                                              rows="6" />
+                                <InputTextArea @bind-Value="recipe.Steps" placeholder="Describe the preparation steps..."
+                                    class="form-control" rows="6" />
                             </div>
 
+                            <!-- Ingredients section -->
                             <div class="mb-4">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <h4 class="mb-0">
                                         <i class="bi bi-basket"></i> Ingredients
                                     </h4>
-                                    <button type="button" 
-                                            class="btn btn-success btn-sm" 
-                                            @onclick="AddIngredient">
+                                    <!-- Add ingredient button -->
+                                    <button type="button" class="btn btn-success btn-sm" @onclick="AddIngredient"
+                                        disabled="@isSaving">
                                         <i class="bi bi-plus-circle"></i> Add Ingredient
                                     </button>
                                 </div>
 
+                                <!-- Ingredients table -->
                                 <div class="table-responsive">
                                     <table class="table table-hover align-middle">
                                         <thead class="table-light">
@@ -71,31 +100,31 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <!-- Loop through each ingredient -->
                                             @for (int i = 0; i < recipe.Ingredients.Count; i++)
                                             {
                                                 var index = i;
                                                 <tr @key="i" class="ingredient-row">
+                                                    <!-- Ingredient name input -->
                                                     <td>
-                                                        <InputText @bind-Value="recipe.Ingredients[index].Name" 
-                                                                  placeholder="e.g., Flour" 
-                                                                  class="form-control" />
+                                                        <InputText @bind-Value="recipe.Ingredients[index].Name"
+                                                            placeholder="e.g., Flour" class="form-control" />
                                                     </td>
+                                                    <!-- Ingredient quantity input -->
                                                     <td>
-                                                        <InputNumber @bind-Value="recipe.Ingredients[index].Quantity" 
-                                                                    placeholder="0" 
-                                                                    class="form-control" 
-                                                                    TValue="double?" />
+                                                        <InputNumber @bind-Value="recipe.Ingredients[index].Quantity"
+                                                            placeholder="0" class="form-control" TValue="double?" />
                                                     </td>
+                                                    <!-- Ingredient unit input -->
                                                     <td>
-                                                        <InputText @bind-Value="recipe.Ingredients[index].Unit" 
-                                                                  placeholder="e.g., cups" 
-                                                                  class="form-control" />
+                                                        <InputText @bind-Value="recipe.Ingredients[index].Unit"
+                                                            placeholder="e.g., cups" class="form-control" />
                                                     </td>
+                                                    <!-- Remove ingredient button -->
                                                     <td class="text-center">
-                                                        <button type="button" 
-                                                                class="btn btn-danger btn-sm" 
-                                                                @onclick="@(() => RemoveIngredient(index))">
-                                                            <i class="bi bi-trash">Remove</i>
+                                                        <button type="button" class="btn btn-danger btn-sm"
+                                                            @onclick="@(() => RemoveIngredient(index))" disabled="@isSaving">
+                                                            <i class="bi bi-trash"></i> Remove
                                                         </button>
                                                     </td>
                                                 </tr>
@@ -105,12 +134,25 @@
                                 </div>
                             </div>
 
+                            <!-- Form action buttons -->
                             <div class="d-flex gap-2 justify-content-end border-top pt-3">
+                                <!-- Cancel button - navigates back to recipe details -->
                                 <a href="/recipes/details/@recipe.Id" class="btn btn-outline-secondary">
                                     <i class="bi bi-x-circle"></i> Cancel
                                 </a>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-save"></i> Save Changes
+                                <!-- Submit button with loading state -->
+                                <button type="submit" class="btn btn-primary" disabled="@isSaving">
+                                    @if (isSaving)
+                                    {
+                                        <span class="spinner-border spinner-border-sm me-2" role="status"
+                                            aria-hidden="true"></span>
+                                        <span>Saving...</span>
+                                    }
+                                    else
+                                    {
+                                        <i class="bi bi-save"></i>
+                                        <span>Save Changes</span>
+                                    }
                                 </button>
                             </div>
                         </EditForm>
@@ -166,12 +208,18 @@
         padding: 0.375rem 0.75rem;
     }
 
-    h3 i, h4 i, .form-label i {
+    h3 i,
+    h4 i,
+    .form-label i {
         margin-right: 0.5rem;
     }
 
     .validation-summary {
         border-radius: 8px;
+    }
+
+    .alert i {
+        margin-right: 0.5rem;
     }
 
     @@media (max-width: 768px) {
@@ -182,60 +230,230 @@
         .btn {
             font-size: 0.875rem;
         }
+
+        .d-flex.gap-2 {
+            flex-direction: column;
+        }
     }
 </style>
 
 @code {
+    // Route parameter for the recipe ID
     [Parameter]
     public int Id { get; set; }
-    
+
+    // Recipe being edited
     private Recipe? recipe;
 
+    // UI state variables
+    private string? errorMessage;
+    private string? successMessage;
+    private bool isLoading = true;
+    private bool isSaving = false;
+
+    /// <summary>
+    /// Initializes the component by loading the recipe data from the database
+    /// Handles errors if the recipe cannot be found
+    /// </summary>
     protected override async Task OnInitializedAsync()
     {
-        recipe = await RecipeService.GetByIdAsync(Id);
-        
-        // Asegurar que hay al menos un ingrediente
-        if (recipe != null && (recipe.Ingredients == null || recipe.Ingredients.Count == 0))
+        try
         {
-            recipe.Ingredients = new List<Ingredient>
+            isLoading = true;
+
+            // Fetch the recipe by ID
+            recipe = await RecipeService.GetByIdAsync(Id);
+
+            // Validate that the recipe was found
+            if (recipe == null)
             {
-                new Ingredient { Name = string.Empty, Quantity = 0, Unit = string.Empty }
-            };
+                errorMessage = $"Recipe with ID {Id} was not found.";
+                return;
+            }
+
+            // Ensure the recipe has at least one ingredient
+            if (recipe.Ingredients == null || recipe.Ingredients.Count == 0)
+            {
+                recipe.Ingredients = new List<Ingredient>
+{
+new Ingredient { Name = string.Empty, Quantity = 0, Unit = string.Empty }
+};
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle any errors that occur while loading the recipe
+            errorMessage = $"Error loading recipe: {ex.Message}";
+            recipe = null;
+        }
+        finally
+        {
+            isLoading = false;
         }
     }
 
+    /// <summary>
+    /// Adds a new empty ingredient to the recipe's ingredient list
+    /// </summary>
     private void AddIngredient()
     {
-        if (recipe != null)
+        try
         {
-            recipe.Ingredients.Add(new Ingredient { Name = string.Empty, Quantity = 0, Unit = string.Empty });
+            if (recipe == null)
+            {
+                errorMessage = "Cannot add ingredient: Recipe not loaded.";
+                StateHasChanged();
+                return;
+            }
+
+            recipe.Ingredients.Add(new Ingredient
+            {
+                Name = string.Empty,
+                Quantity = 0,
+                Unit = string.Empty
+            });
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors when adding ingredients
+            errorMessage = $"Error adding ingredient: {ex.Message}";
             StateHasChanged();
         }
     }
 
+    /// <summary>
+    /// Removes an ingredient from the recipe at the specified index
+    /// Ensures at least one ingredient remains in the list
+    /// </summary>
+    /// <param name="index">The index of the ingredient to remove</param>
     private void RemoveIngredient(int index)
     {
-        if (recipe != null)
+        try
         {
+            if (recipe == null)
+            {
+                errorMessage = "Cannot remove ingredient: Recipe not loaded.";
+                StateHasChanged();
+                return;
+            }
+
+            // Validate index is within bounds
+            if (index < 0 || index >= recipe.Ingredients.Count)
+            {
+                errorMessage = "Invalid ingredient index.";
+                StateHasChanged();
+                return;
+            }
+
+            // Keep at least one ingredient in the list
             if (recipe.Ingredients.Count > 1)
             {
                 recipe.Ingredients.RemoveAt(index);
             }
             else
             {
-                recipe.Ingredients[0] = new Ingredient { Name = string.Empty, Quantity = 0, Unit = string.Empty };
+                // Reset the last ingredient instead of removing it
+                recipe.Ingredients[0] = new Ingredient
+                {
+                    Name = string.Empty,
+                    Quantity = 0,
+                    Unit = string.Empty
+                };
             }
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors when removing ingredients
+            errorMessage = $"Error removing ingredient: {ex.Message}";
             StateHasChanged();
         }
     }
 
+    /// <summary>
+    /// Handles the form submission when validation passes
+    /// Updates the recipe in the database and navigates to the details page
+    /// </summary>
     private async Task HandleValidSubmit()
     {
-        if (recipe != null)
+        try
         {
+            // Clear any previous messages
+            errorMessage = null;
+            successMessage = null;
+            isSaving = true;
+            StateHasChanged();
+
+            // Validate that the recipe exists
+            if (recipe == null)
+            {
+                throw new InvalidOperationException("Recipe not loaded.");
+            }
+
+            // Validate that the recipe has required data
+            if (string.IsNullOrWhiteSpace(recipe.Title))
+            {
+                throw new InvalidOperationException("Recipe title is required.");
+            }
+
+            // Validate that preparation steps are provided
+            if (string.IsNullOrWhiteSpace(recipe.Steps))
+            {
+                throw new InvalidOperationException("Preparation steps are required.");
+            }
+
+            if (recipe.Ingredients == null || recipe.Ingredients.Count == 0)
+            {
+                throw new InvalidOperationException("At least one ingredient is required.");
+            }
+
+            // Validate that at least one ingredient has a name
+            if (!recipe.Ingredients.Any(i => !string.IsNullOrWhiteSpace(i.Name)))
+            {
+                throw new InvalidOperationException("Please provide at least one ingredient with a name.");
+            }
+
+            // Get the recipe name for the success message
+            string recipeName = recipe.Title ?? "Recipe";
+
+            // Update the recipe in the database
             await RecipeService.UpdateAsync(recipe);
+
+            // Show success message
+            successMessage = $"'{recipeName}' has been updated successfully!";
+            StateHasChanged();
+
+            // Wait 2 seconds to show the success message before redirecting
+            await Task.Delay(2000);
+
+            // Navigate to the recipe details page
             Navigation.NavigateTo($"/recipes/details/{recipe.Id}");
         }
+        catch (InvalidOperationException ex)
+        {
+            // Handle validation errors
+            errorMessage = ex.Message;
+            successMessage = null;
+            isSaving = false;
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors during recipe update
+            errorMessage = $"An error occurred while updating the recipe: {ex.Message}";
+            successMessage = null;
+            isSaving = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Dismisses the error message when the user clicks the close button
+    /// </summary>
+    private void DismissError()
+    {
+        errorMessage = null;
+        StateHasChanged();
     }
 }

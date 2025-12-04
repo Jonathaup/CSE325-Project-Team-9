@@ -4,16 +4,20 @@
 @inject RecipeService RecipeService
 
 <div class="container mt-4">
+    <!-- Header section with page title and create button (page heading and navigation) -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="display-4">My Recipes</h1>
+        <!-- Button that redirects to the recipe creation page -->
         <a href="/recipes/create" class="btn btn-primary btn-lg">
             <i class="bi bi-plus-circle"></i> Create New Recipe
         </a>
     </div>
 
+    <!-- Loading state: shown while the recipe list is still not loaded (recipes == null) -->
     @if (recipes == null)
     {
         <div class="text-center my-5">
+            <!-- Spinner animation indicating data loading -->
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
@@ -23,6 +27,7 @@
     else if (recipes.Count == 0)
     {
         <div class="alert alert-info text-center my-5">
+            <!-- User-friendly message encouraging recipe creation -->
             <h4>No recipes yet!</h4>
             <p class="mb-0">Start by creating your first recipe.</p>
         </div>
@@ -30,19 +35,29 @@
     else
     {
         <div class="row g-4">
+            <!-- Iterate through the recipes list and draw each recipe as a card -->
             @foreach (var recipe in recipes)
             {
                 <div class="col-md-6 col-lg-4">
+                    <!-- Individual recipe card with hover animation -->
                     <div class="card h-100 shadow-sm hover-card">
                         <div class="card-body">
+                            <!-- Show recipe title from model -->
                             <h5 class="card-title">@recipe.Title</h5>
+
+                            <!-- Count ingredients and add plural if needed -->
                             <p class="card-text text-muted">
-                                <i class="bi bi-list-ul"></i> @recipe.Ingredients.Count ingredient@(recipe.Ingredients.Count != 1 ? "s" : "")
+                                <i class="bi bi-list-ul"></i> @recipe.Ingredients.Count ingredient@(recipe.Ingredients.Count !=
+                                                        1 ? "s" : "")
                             </p>
+
+                            <!-- Short preview of recipe steps: truncated to avoid overflow -->
                             <div class="text-truncate text-muted small mb-3" style="max-height: 40px;">
                                 @(recipe.Steps?.Length > 100 ? recipe.Steps.Substring(0, 100) + "..." : recipe.Steps)
                             </div>
                         </div>
+
+                        <!-- Footer with button linking to recipe details -->
                         <div class="card-footer bg-transparent border-0">
                             <a href="/recipes/details/@recipe.Id" class="btn btn-outline-primary w-100">View Details</a>
                         </div>
@@ -54,20 +69,24 @@
 </div>
 
 <style>
+    /* Smooth hover animation for recipe cards */
     .hover-card {
         transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     }
 
+    /* Slight elevation effect when card is hovered */
     .hover-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
     }
 
+    /* Apply strong color and weight to card titles */
     .card-title {
         color: #2c3e50;
         font-weight: 600;
     }
 
+    /* Style the main page title to match theme */
     .display-4 {
         color: #2c3e50;
         font-weight: 700;
@@ -75,10 +94,13 @@
 </style>
 
 @code {
+    // List that stores fetched recipes; null means that data is still loading
     private List<Recipe>? recipes;
 
+    // Called when the component loads: fetch all recipes asynchronously
     protected override async Task OnInitializedAsync()
     {
+        // Retrieve recipes using RecipeService and assign to local list
         recipes = await RecipeService.GetAllAsync();
     }
 }
