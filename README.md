@@ -86,12 +86,6 @@ RecipeManager/
 │   ├── _Imports.razor
 │   ├── App.razor
 │   ├── Routes.razor
-│   ├── Shared/
-│   │    ├── LoginDisplay.razor
-│   │    ├── MainLayout.razor
-│   │    ├── MainLayout.razor.css
-│   │    ├── NavMenu.razor
-│   │    └── NavMenu.razor.css
 │   └── Pages/
 │   │   ├── Counter.razor
 │   │   ├── Create.razor
@@ -101,9 +95,12 @@ RecipeManager/
 │   │   ├── Login.razor
 │   │   ├── Logout.razor
 │   │   └── Weather.razor
-│   ├── App.db
-│   ├── Program.cs
-│   └── appsettings.json
+│   └── Shared/
+│       ├── LoginDisplay.razor
+│       ├── MainLayout.razor
+│       ├── MainLayout.razor.css
+│       ├── NavMenu.razor
+│       └── NavMenu.razor.css
 ├── Controllers/
 │   └── AuthController.cs
 ├── Data/
@@ -117,10 +114,10 @@ RecipeManager/
 │   ├── RecipeService.cs
 │   └── UserService.cs
 └── wwwroot/
-│  ├─ lib/
-│  │  └─ bootstrap/
-│  ├─ app.css
-│  └─ favicon.png
+│  ├──  lib/
+│  │  └── bootstrap/
+│  ├──  app.css
+│  └── favicon.png
 ├─ App.db
 ├─ appsettings.Development.json
 ├─ appsettings.json
