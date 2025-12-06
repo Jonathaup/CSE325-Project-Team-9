@@ -92,29 +92,26 @@ RecipeManager/
 │   │    ├── NavMenu.razor
 │   │    └── NavMenu.razor.css
 │   └── Pages/
-│   │   ├── Error.razor
-│   │   ├── Home.razor
-│   │   ├── Weather.razor
-│   │   └── Recipes
-│   │       ├── RecipeCreate.razor
-│   │       ├── RecipeDetails.razor
-│   │       ├── RecipeEdit.razor
-│   │       └── RecipeList.razor
-│   ├── App.db
-│   ├── Program.cs
-│   └── appsettings.json
+│       ├── Error.razor
+│       ├── Home.razor
+│       ├── Weather.razor
+│       └── Recipes
+│           ├── RecipeCreate.razor
+│           ├── RecipeDetails.razor
+│           ├── RecipeEdit.razor
+│           └── RecipeList.razor
 ├── Data/
 │   └── ApplicationDbContext.cs
 ├── Models/
 │   ├── Ingredient.cs
-│   ├── Recipe.cs
+│   └── Recipe.cs
 ├── Services/
-│   ├── RecipeService.cs
+│   └── RecipeService.cs
 └── wwwroot/
-│  ├─ lib/
-│  │  └─ bootstrap/
-│  ├─ app.css
-│  └─ favicon.png
+│  ├── lib/
+│  │  └── bootstrap/
+│  ├── app.css
+│  └── favicon.png
 ├─ App.db
 ├─ appsettings.Development.json
 ├─ appsettings.json
