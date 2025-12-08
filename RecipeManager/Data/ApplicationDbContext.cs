@@ -11,5 +11,8 @@ namespace RecipeManager.Data
 
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<MealSchedule> MealSchedules { get; set; }
+        public DbSet<ShoppingList> ShoppingLists { get; set; }
+        public DbSet<ShoppingListItem> ShoppingListItems { get; set; }
     }
 }
