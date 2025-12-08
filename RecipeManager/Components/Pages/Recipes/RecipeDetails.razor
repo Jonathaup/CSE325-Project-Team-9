@@ -2,6 +2,8 @@
 @rendermode InteractiveServer
 @using RecipeManager.Models
 @using RecipeManager.Services
+@using Microsoft.AspNetCore.Authorization 
+@attribute [Authorize]
 @inject RecipeService RecipeService
 @inject NavigationManager Navigation
 

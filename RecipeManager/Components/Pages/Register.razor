@@ -1,0 +1,63 @@
+@page "/register"
+@inject NavigationManager Nav
+
+<PageTitle>RecipeManager - Register</PageTitle>
+
+<div class="container mt-5 fade-in">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-5">
+                    
+                    <div class="text-center mb-4">
+                        <i class="bi bi-journal-plus fs-1 text-success"></i>
+                        <h3 class="fw-bold mt-2">Create Account</h3>
+                        <p class="text-muted">Start building your recipe collection.</p>
+                    </div>
+
+                    <form method="post" action="/auth/register">
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-secondary fw-semibold">Email Address</label>
+                            <input type="email" name="email" class="form-control" placeholder="name@example.com" required />
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-secondary fw-semibold">Chef Name (Display Name)</label>
+                            <input type="text" name="displayName" class="form-control" placeholder="e.g. Chef Gordon" required />
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label text-secondary fw-semibold">Password</label>
+                            <input type="password" name="password" class="form-control" placeholder="Create a strong password" required />
+                            <div class="form-text">Must be at least 6 characters long.</div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg text-white">
+                                <i class="bi bi-check-lg me-2"></i> Register
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer bg-light text-center py-3 border-0 rounded-bottom">
+                    <small class="text-muted">
+                        Already have an account? <a href="login" class="text-decoration-none fw-bold">Log in</a>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .fade-in {
+        animation: fadeIn 0.6s ease-in-out;
+    }
+    /* Input focus styling for green theme on register page */
+    .form-control:focus {
+        border-color: #198754;
+        box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+    }
+</style>
