@@ -3,6 +3,8 @@
 @using RecipeManager.Models
 @using RecipeManager.Services
 @using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Authorization 
+@attribute [Authorize]
 @inject RecipeService RecipeService
 @inject NavigationManager Navigation
 

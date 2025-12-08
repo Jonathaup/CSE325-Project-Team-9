@@ -1,0 +1,12 @@
+@page "/logout"
+
+<h3>Logging out...</h3>
+
+<form id="logoutForm" action="/auth/logout" method="post">
+    <button type="submit">Click here if not redirected</button>
+</form>
+
+<script>
+    // Automatically submit the form when the page loads
+    document.getElementById('logoutForm').submit();
+</script>
