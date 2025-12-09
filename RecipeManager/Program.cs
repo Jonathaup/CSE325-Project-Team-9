@@ -67,7 +67,12 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 // Map the AuthController (Must be mapped for the Login form POST to work)
-app.MapControllers();    
+app.MapControllers();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.EnsureCreated();  // or db.Database.Migrate();
+}
 // Run the application
 app.Run();
