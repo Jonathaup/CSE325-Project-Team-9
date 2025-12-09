@@ -44,10 +44,18 @@ builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-// Run EF Core migrations automatically at startup
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+    // Crear la carpeta si no existe
+    var dbFolder = Path.GetDirectoryName(db.Database.GetDbConnection().DataSource);
+    if (!Directory.Exists(dbFolder))
+    {
+        Directory.CreateDirectory(dbFolder);
+    }
+
+    // Ejecutar migraciones automáticamente
     db.Database.Migrate();
 }
 
