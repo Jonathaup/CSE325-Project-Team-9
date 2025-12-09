@@ -1,7 +1,72 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.Components.Authorization
 
-<PageTitle>Home</PageTitle>
+<PageTitle>RecipeManager - Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="home-container fade-in">
+    <div class="text-center py-5">
+        <h1 class="display-3 fw-bold text-success mb-3">
+            <i class="bi bi-egg-fried"></i> RecipeManager
+        </h1>
+        <p class="lead text-secondary mb-5">
+            Your personal digital kitchen companion. Organize, cook, and enjoy.
+        </p>
 
-Welcome to your new app.
+        <AuthorizeView>
+            <Authorized>
+                <div class="card shadow-sm border-0 mx-auto" style="max-width: 600px;">
+                    <div class="card-body p-5">
+                        <h2 class="h4 mb-3">Welcome back, @context.User.Identity?.Name!</h2>
+                        <p class="text-muted mb-4">Ready to cook something new today?</p>
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                            <a href="recipes" class="btn btn-primary btn-lg px-4 gap-3">
+                                <i class="bi bi-journal-text"></i> View My Cookbook
+                            </a>
+                            <a href="recipes/create" class="btn btn-outline-success btn-lg px-4">
+                                <i class="bi bi-plus-lg"></i> New Recipe
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </Authorized>
+            <NotAuthorized>
+                <div class="row justify-content-center g-4">
+                    <div class="col-md-5">
+                        <div class="card h-100 shadow-sm border-0 bg-light">
+                            <div class="card-body p-4 text-center">
+                                <i class="bi bi-safe fs-1 text-primary mb-3"></i>
+                                <h5>Safe Storage</h5>
+                                <p class="small text-muted">Keep your family secrets secure and accessible from anywhere.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="card h-100 shadow-sm border-0 bg-light">
+                            <div class="card-body p-4 text-center">
+                                <i class="bi bi-tablet fs-1 text-success mb-3"></i>
+                                <h5>Easy Cooking</h5>
+                                <p class="small text-muted">Follow step-by-step guides optimized for your tablet or phone.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-5">
+                    <p class="mb-3">Start building your collection today.</p>
+                    <a href="register" class="btn btn-success btn-lg px-5 me-2">Get Started</a>
+                    <a href="login" class="btn btn-outline-secondary btn-lg px-5">Log In</a>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+</div>
+
+<style>
+    .fade-in {
+        animation: fadeIn 0.8s ease-in-out;
+    }
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
