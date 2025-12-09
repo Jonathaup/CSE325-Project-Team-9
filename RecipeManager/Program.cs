@@ -44,6 +44,13 @@ builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
+// Run EF Core migrations automatically at startup
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+}
+
 // Configure request pipeline for production
 if (!app.Environment.IsDevelopment())
 {
