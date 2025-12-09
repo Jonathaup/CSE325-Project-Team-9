@@ -4,9 +4,10 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["RecipeManager.csproj", "./"]
-RUN dotnet restore "RecipeManager.csproj"
+COPY ["RecipeManager/RecipeManager.csproj", "RecipeManager/"]
+RUN dotnet restore "RecipeManager/RecipeManager.csproj"
 COPY . .
+WORKDIR "/src/RecipeManager"
 RUN dotnet build "RecipeManager.csproj" -c Release -o /app/build
 
 FROM build AS publish
