@@ -7,6 +7,7 @@ using RecipeManager.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // ==========================================
 // 1. Service Registration
 // ==========================================
@@ -44,6 +45,12 @@ builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.EnsureCreated();  // or db.Database.Migrate();
+}
+
 // Configure request pipeline for production
 if (!app.Environment.IsDevelopment())
 {
@@ -69,10 +76,13 @@ app.MapRazorComponents<App>()
 // Map the AuthController (Must be mapped for the Login form POST to work)
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
+// --- NEW: Fallback route for SPA / client-side routes ---
+app.MapFallback(context =>
 {
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.EnsureCreated();  // or db.Database.Migrate();
-}
+    context.Response.Redirect("/"); // redirect unknown routes to root
+    return Task.CompletedTask;
+});
+
+
 // Run the application
 app.Run();
