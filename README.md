@@ -94,19 +94,25 @@ RecipeManager/
 │   └── Pages/
 │       ├── Error.razor
 │       ├── Home.razor
-│       ├── Weather.razor
+│       ├── Login.razor
+│       ├── Register.razor
 │       └── Recipes
 │           ├── RecipeCreate.razor
 │           ├── RecipeDetails.razor
 │           ├── RecipeEdit.razor
 │           └── RecipeList.razor
+├── Controllers/
+│   └── AuthController.cs
 ├── Data/
 │   └── ApplicationDbContext.cs
 ├── Models/
 │   ├── Ingredient.cs
-│   └── Recipe.cs
+│   ├── Recipe.cs
+│   └── User.cs
 ├── Services/
-│   └── RecipeService.cs
+│   ├── IUserService.cs
+│   ├── RecipeService.cs
+│   └── UserService.cs
 └── wwwroot/
 │  ├── lib/
 │  │  └── bootstrap/
